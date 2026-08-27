@@ -27,6 +27,7 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 const url = require('url');
+const crypto = require('crypto');
 
 const PORT = process.env.PORT || 3000;
 
@@ -135,6 +136,40 @@ function readBody(req) {
   });
 }
 
+// ---------- Admin authentication ----------
+// A lightweight session system: no external packages needed.
+//   - Password lives in data.json (settings.adminPassword), defaulting to
+//     'admin123' the first time the server runs — change it from
+//     Admin → Settings as soon as possible.
+//   - On successful login, the server hands out a random token and keeps
+//     it in memory (validAdminTokens). The browser stores that token and
+//     sends it back as the "x-admin-token" header on every admin request.
+//   - Tokens live only in memory, so everyone is logged out if the server
+//     restarts — an acceptable trade-off for a project this size, and it
+//     means there's no session data to manage or expire manually.
+const DEFAULT_ADMIN_PASSWORD = 'admin123';
+const validAdminTokens = new Set();
+
+function getAdminPassword(data) {
+  return (data.settings && data.settings.adminPassword) || DEFAULT_ADMIN_PASSWORD;
+}
+function isAdminAuthed(req) {
+  const token = req.headers['x-admin-token'];
+  return !!token && validAdminTokens.has(token);
+}
+function requireAdmin(req, res) {
+  if (!isAdminAuthed(req)) {
+    sendJSON(res, 401, { error: 'Unauthorized — please log in to the admin panel again.' });
+    return false;
+  }
+  return true;
+}
+// Never leak the password hash/value to the client via GET /api/settings.
+function publicSettings(data) {
+  const { adminPassword, ...rest } = data.settings || {};
+  return rest;
+}
+
 const server = http.createServer(async (req, res) => {
   const parsed = url.parse(req.url, true);
   const pathname = parsed.pathname;
@@ -148,11 +183,41 @@ const server = http.createServer(async (req, res) => {
       return sendJSON(res, 500, { error: 'Could not read data.json' });
     }
 
+    // ----- Admin authentication -----
+    if (pathname === '/api/admin/login' && req.method === 'POST') {
+      const body = await readBody(req);
+      if ((body.password || '') !== getAdminPassword(data)) {
+        return sendJSON(res, 401, { error: 'Incorrect password' });
+      }
+      const token = crypto.randomBytes(24).toString('hex');
+      validAdminTokens.add(token);
+      return sendJSON(res, 200, { token });
+    }
+    if (pathname === '/api/admin/logout' && req.method === 'POST') {
+      const token = req.headers['x-admin-token'];
+      if (token) validAdminTokens.delete(token);
+      return sendJSON(res, 200, { ok: true });
+    }
+    if (pathname === '/api/admin/change-password' && req.method === 'POST') {
+      if (!requireAdmin(req, res)) return;
+      const body = await readBody(req);
+      if ((body.oldPassword || '') !== getAdminPassword(data)) {
+        return sendJSON(res, 401, { error: 'Current password is incorrect' });
+      }
+      if (!body.newPassword || body.newPassword.length < 4) {
+        return sendJSON(res, 400, { error: 'New password must be at least 4 characters' });
+      }
+      data.settings = { ...data.settings, adminPassword: body.newPassword };
+      writeData(data);
+      return sendJSON(res, 200, { ok: true });
+    }
+
     // ----- Products -----
     if (pathname === '/api/products' && req.method === 'GET') {
       return sendJSON(res, 200, data.products);
     }
     if (pathname === '/api/products' && req.method === 'POST') {
+      if (!requireAdmin(req, res)) return;
       const body = await readBody(req);
       body.id = Date.now();
       data.products.push(body);
@@ -161,6 +226,7 @@ const server = http.createServer(async (req, res) => {
     }
     let m = pathname.match(/^\/api\/products\/(\d+)$/);
     if (m && req.method === 'PUT') {
+      if (!requireAdmin(req, res)) return;
       const body = await readBody(req);
       const idx = data.products.findIndex(p => String(p.id) === m[1]);
       if (idx === -1) return sendJSON(res, 404, { error: 'Product not found' });
@@ -169,6 +235,7 @@ const server = http.createServer(async (req, res) => {
       return sendJSON(res, 200, data.products[idx]);
     }
     if (m && req.method === 'DELETE') {
+      if (!requireAdmin(req, res)) return;
       data.products = data.products.filter(p => String(p.id) !== m[1]);
       writeData(data);
       return sendJSON(res, 200, { ok: true });
@@ -176,9 +243,11 @@ const server = http.createServer(async (req, res) => {
 
     // ----- Orders -----
     if (pathname === '/api/orders' && req.method === 'GET') {
+      if (!requireAdmin(req, res)) return;
       return sendJSON(res, 200, data.orders);
     }
     if (pathname === '/api/orders' && req.method === 'POST') {
+      // Placing an order is a public, unauthenticated customer action.
       const body = await readBody(req);
       const orderId = 'SH-' + Math.floor(80000 + Math.random() * 9999);
       const order = {
@@ -210,6 +279,7 @@ const server = http.createServer(async (req, res) => {
     }
     m = pathname.match(/^\/api\/orders\/([\w-]+)$/);
     if (m && req.method === 'PUT') {
+      if (!requireAdmin(req, res)) return;
       const body = await readBody(req);
       const idx = data.orders.findIndex(o => o.id === m[1]);
       if (idx === -1) return sendJSON(res, 404, { error: 'Order not found' });
@@ -220,18 +290,21 @@ const server = http.createServer(async (req, res) => {
 
     // ----- Customers -----
     if (pathname === '/api/customers' && req.method === 'GET') {
+      if (!requireAdmin(req, res)) return;
       return sendJSON(res, 200, data.customers);
     }
 
     // ----- Site Settings -----
     if (pathname === '/api/settings' && req.method === 'GET') {
-      return sendJSON(res, 200, data.settings || {});
+      return sendJSON(res, 200, publicSettings(data));
     }
     if (pathname === '/api/settings' && req.method === 'PUT') {
+      if (!requireAdmin(req, res)) return;
       const body = await readBody(req);
+      delete body.adminPassword; // change password only via /api/admin/change-password
       data.settings = { ...data.settings, ...body };
       writeData(data);
-      return sendJSON(res, 200, data.settings);
+      return sendJSON(res, 200, publicSettings(data));
     }
 
     // ----- FAQs -----
@@ -239,6 +312,7 @@ const server = http.createServer(async (req, res) => {
       return sendJSON(res, 200, data.faqs || []);
     }
     if (pathname === '/api/faqs' && req.method === 'POST') {
+      if (!requireAdmin(req, res)) return;
       const body = await readBody(req);
       if (!data.faqs) data.faqs = [];
       const faq = {
@@ -254,6 +328,7 @@ const server = http.createServer(async (req, res) => {
     }
     m = pathname.match(/^\/api\/faqs\/(\d+)$/);
     if (m && req.method === 'PUT') {
+      if (!requireAdmin(req, res)) return;
       const body = await readBody(req);
       const idx = (data.faqs || []).findIndex(f => String(f.id) === m[1]);
       if (idx === -1) return sendJSON(res, 404, { error: 'FAQ not found' });
@@ -262,6 +337,7 @@ const server = http.createServer(async (req, res) => {
       return sendJSON(res, 200, data.faqs[idx]);
     }
     if (m && req.method === 'DELETE') {
+      if (!requireAdmin(req, res)) return;
       data.faqs = (data.faqs || []).filter(f => String(f.id) !== m[1]);
       writeData(data);
       return sendJSON(res, 200, { ok: true });
@@ -273,6 +349,7 @@ const server = http.createServer(async (req, res) => {
     }
     m = pathname.match(/^\/api\/policies\/(returns|shipping)$/);
     if (m && req.method === 'PUT') {
+      if (!requireAdmin(req, res)) return;
       const body = await readBody(req);
       if (!data.policies) data.policies = {};
       const key = m[1];
@@ -290,6 +367,7 @@ const server = http.createServer(async (req, res) => {
       return sendJSON(res, 200, data.heroSlides || []);
     }
     if (pathname === '/api/hero-slides' && req.method === 'POST') {
+      if (!requireAdmin(req, res)) return;
       const body = await readBody(req);
       if (!data.heroSlides) data.heroSlides = [];
       const slide = {
@@ -309,6 +387,7 @@ const server = http.createServer(async (req, res) => {
     }
     m = pathname.match(/^\/api\/hero-slides\/(\d+)$/);
     if (m && req.method === 'PUT') {
+      if (!requireAdmin(req, res)) return;
       const body = await readBody(req);
       const idx = (data.heroSlides || []).findIndex(s => String(s.id) === m[1]);
       if (idx === -1) return sendJSON(res, 404, { error: 'Slide not found' });
@@ -317,6 +396,7 @@ const server = http.createServer(async (req, res) => {
       return sendJSON(res, 200, data.heroSlides[idx]);
     }
     if (m && req.method === 'DELETE') {
+      if (!requireAdmin(req, res)) return;
       data.heroSlides = (data.heroSlides || []).filter(s => String(s.id) !== m[1]);
       writeData(data);
       return sendJSON(res, 200, { ok: true });
@@ -324,6 +404,7 @@ const server = http.createServer(async (req, res) => {
 
     // ----- Image upload (product photos) -----
     if (pathname === '/api/upload' && req.method === 'POST') {
+      if (!requireAdmin(req, res)) return;
       const body = await readBody(req);
       const match = /^data:(image\/[\w+.-]+);base64,(.+)$/.exec(body.dataUrl || '');
       if (!match) return sendJSON(res, 400, { error: 'Expected a base64 image data URL' });

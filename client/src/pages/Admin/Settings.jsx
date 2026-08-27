@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useApp } from "../../context/AppContext";
 
 export default function Settings() {
-  const { settings, saveSiteSettings } = useApp();
+  const { settings, saveSiteSettings, changeAdminPassword, adminLogout } = useApp();
   const [storeName, setStoreName] = useState("");
   const [tagline, setTagline] = useState("");
   const [banner, setBanner] = useState("");
@@ -10,6 +10,12 @@ export default function Settings() {
   const [email, setEmail] = useState("");
   const [whatsapp, setWhatsapp] = useState("");
   const [address, setAddress] = useState("");
+
+  const [oldPassword, setOldPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [pwMsg, setPwMsg] = useState({ ok: null, text: "" });
+  const [pwSaving, setPwSaving] = useState(false);
 
   useEffect(() => {
     setStoreName(settings.storeName || "");
@@ -33,6 +39,29 @@ export default function Settings() {
     });
   }
 
+  async function handleChangePassword() {
+    setPwMsg({ ok: null, text: "" });
+    if (!oldPassword || !newPassword) {
+      setPwMsg({ ok: false, text: "Fill in both the current and new password." });
+      return;
+    }
+    if (newPassword !== confirmPassword) {
+      setPwMsg({ ok: false, text: "New password and confirmation don't match." });
+      return;
+    }
+    setPwSaving(true);
+    const res = await changeAdminPassword(oldPassword, newPassword);
+    setPwSaving(false);
+    if (!res.ok) {
+      setPwMsg({ ok: false, text: res.msg || "Could not change password." });
+      return;
+    }
+    setPwMsg({ ok: true, text: "Password changed. You'll need it next time you log in." });
+    setOldPassword("");
+    setNewPassword("");
+    setConfirmPassword("");
+  }
+
   return (
     <>
       <div className="admin-head"><h2>Website Settings</h2></div>
@@ -49,6 +78,30 @@ export default function Settings() {
         <button className="btn btn-gold btn-sm" onClick={handleSave}>Save Settings</button>
         <p style={{ fontSize: 11.5, color: "var(--muted)", marginTop: 12 }}>These are saved to <code>data.json</code> and applied across the whole storefront (footer, WhatsApp button, top banner) immediately.</p>
       </div>
+
+      <div className="chart-card" style={{ maxWidth: 560, marginTop: 24 }}>
+        <h3 style={{ fontSize: 15, marginBottom: 14 }}>🔒 Change Admin Password</h3>
+        <div className="field"><label>Current password</label><input type="password" value={oldPassword} onChange={(e) => setOldPassword(e.target.value)} /></div>
+        <div className="field"><label>New password</label><input type="password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} /></div>
+        <div className="field"><label>Confirm new password</label><input type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} /></div>
+        {pwMsg.text && (
+          <p style={{ fontSize: 12.5, marginBottom: 10, color: pwMsg.ok ? "var(--success, #3a7d5c)" : "var(--danger, #c0453b)" }}>{pwMsg.text}</p>
+        )}
+        <button className="btn btn-outline btn-sm" onClick={handleChangePassword} disabled={pwSaving}>
+          {pwSaving ? "Saving…" : "Change Password"}
+        </button>
+        <p style={{ fontSize: 11.5, color: "var(--muted)", marginTop: 12 }}>
+          The default password is <code>admin123</code> — please change it to something only you know.
+        </p>
+      </div>
+
+      <button
+        onClick={adminLogout}
+        style={{ marginTop: 24, fontSize: 12.5, color: "#e08a8a", textDecoration: "underline" }}
+      >
+        Log out of admin panel
+      </button>
     </>
   );
 }
+

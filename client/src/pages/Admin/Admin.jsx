@@ -9,6 +9,7 @@ import Settings from "./Settings.jsx";
 import Faqs from "./Faqs.jsx";
 import Policies from "./Policies.jsx";
 import Banner from "./Banner.jsx";
+import AdminLogin from "./AdminLogin.jsx";
 
 const TABS = [
   { id: "overview", label: "📊 Sales Overview" },
@@ -23,7 +24,7 @@ const TABS = [
 
 export default function Admin() {
   const [tab, setTab] = useState("overview");
-  const { orders, refreshOrders, showToast } = useApp();
+  const { orders, refreshOrders, showToast, isAdminAuthed, adminChecked, adminLogout } = useApp();
   const knownOrderIds = useRef(null); // null until first load, so we don't "alert" for orders that already existed
 
   const pendingCount = orders.filter((o) => o.status === "processing").length;
@@ -32,12 +33,14 @@ export default function Admin() {
   // order placed from another tab/device/customer shows up without a
   // manual refresh — and gives a toast + browser-tab flash when it does.
   useEffect(() => {
+    if (!isAdminAuthed) return;
     if (knownOrderIds.current === null) {
       knownOrderIds.current = new Set(orders.map((o) => o.id));
     }
-  }, [orders]);
+  }, [orders, isAdminAuthed]);
 
   useEffect(() => {
+    if (!isAdminAuthed) return;
     const originalTitle = document.title;
     const interval = setInterval(async () => {
       const fresh = await refreshOrders();
@@ -51,7 +54,23 @@ export default function Admin() {
       }
     }, 15000);
     return () => { clearInterval(interval); document.title = originalTitle; };
-  }, [refreshOrders, showToast]);
+  }, [refreshOrders, showToast, isAdminAuthed]);
+
+  // Wait until we've checked whether a saved session is still valid,
+  // so we don't flash the login screen for an already-logged-in admin.
+  if (!adminChecked) {
+    return (
+      <div className="page active" id="page-admin">
+        <div style={{ minHeight: "50vh", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "var(--font-mono)", color: "var(--muted)" }}>
+          Checking session…
+        </div>
+      </div>
+    );
+  }
+
+  if (!isAdminAuthed) {
+    return <AdminLogin />;
+  }
 
   return (
     <div className="page active" id="page-admin">
@@ -70,6 +89,12 @@ export default function Admin() {
               )}
             </button>
           ))}
+          <button
+            onClick={adminLogout}
+            style={{ marginTop: "auto", color: "#e08a8a", fontSize: 12.5 }}
+          >
+            🔒 Log Out
+          </button>
         </div>
         <div className="admin-main">
           {tab === "overview" && <Overview />}

@@ -30,6 +30,9 @@ Like before, the storefront navigation does NOT show a link to
 /admin — it's reachable directly by typing the URL, same as
 admin.html was before.
 
+The Admin panel is now password-protected — see "ADMIN PANEL LOGIN"
+below.
+
 
 REQUIREMENTS
 --------------
@@ -169,9 +172,34 @@ FOLDER STRUCTURE
                                         Products, Orders, Customers, Settings)
 
 
+ADMIN PANEL LOGIN
+------------------------------
+The Admin panel now requires a password before it can be used — this
+keeps random visitors who guess the /admin URL from touching your
+products, orders, or settings.
+
+  Default password: admin123
+
+CHANGE THIS as soon as you set the site up for real — go to
+Admin -> Settings -> "Change Admin Password" (you'll need to enter the
+current password once to set a new one).
+
+Notes on how the login works:
+  - There's only one shared admin password (no separate accounts) —
+    fine for a single shop owner/small team managing the store.
+  - After logging in, your browser stays logged in (even after closing
+    the tab) until you click "Log Out", or the server is restarted
+    (session tokens live in the server's memory, not in data.json).
+  - If you forget the password, you (or a developer) can reset it by
+    opening data.json on the server, removing the "adminPassword" line
+    from the "settings" section, and restarting the server — it will
+    fall back to the default (admin123) again.
+
+
 HOW TO USE THE ADMIN PANEL
 ------------------------------
-Open http://localhost:3000/admin — 5 tabs:
+Open http://localhost:3000/admin — you'll be asked for the admin
+password first (see "ADMIN PANEL LOGIN" above), then you'll see 5 tabs:
 
   - Sales Overview   - revenue, order count, customers, a weekly chart
   - Products          - add a product with a real photo upload from

@@ -17,6 +17,110 @@ export function AppProvider({ children }) {
   const [heroSlides, setHeroSlides] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  // ---------------- Admin session ----------------
+  const [adminToken, setAdminToken] = useState(() => {
+    try { return localStorage.getItem("stylehub_admin_token") || null; } catch (e) { return null; }
+  });
+  const [adminChecked, setAdminChecked] = useState(false); // has the stored token (if any) been validated yet?
+  const adminTokenRef = useRef(adminToken);
+  useEffect(() => { adminTokenRef.current = adminToken; }, [adminToken]);
+
+  // Wrapper around fetch that attaches the admin session token, used for
+  // every admin-only (mutating or sensitive) request.
+  const adminFetch = useCallback((url, options = {}) => {
+    const headers = { ...(options.headers || {}) };
+    if (adminTokenRef.current) headers["x-admin-token"] = adminTokenRef.current;
+    return fetch(url, { ...options, headers });
+  }, []);
+
+  const isAdminAuthed = !!adminToken;
+
+  const loadAdminData = useCallback(async () => {
+    try {
+      const [oResp, cResp] = await Promise.all([
+        adminFetch("/api/orders"),
+        adminFetch("/api/customers")
+      ]);
+      if (!oResp.ok || !cResp.ok) throw new Error("unauthorized");
+      const [o, c] = await Promise.all([oResp.json(), cResp.json()]);
+      setOrders(o);
+      setCustomers(c);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }, [adminFetch]);
+
+  const adminLogin = useCallback(
+    async (password) => {
+      try {
+        const resp = await fetch("/api/admin/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ password })
+        });
+        if (!resp.ok) {
+          const err = await resp.json().catch(() => ({}));
+          return { ok: false, msg: err.error || "Incorrect password" };
+        }
+        const data = await resp.json();
+        adminTokenRef.current = data.token; // set synchronously so loadAdminData below can use it immediately
+        setAdminToken(data.token);
+        try { localStorage.setItem("stylehub_admin_token", data.token); } catch (e) {}
+        await loadAdminData();
+        return { ok: true };
+      } catch (e) {
+        return { ok: false, msg: "Could not reach the server" };
+      }
+    },
+    [loadAdminData]
+  );
+
+  const adminLogout = useCallback(async () => {
+    try { await adminFetch("/api/admin/logout", { method: "POST" }); } catch (e) {}
+    adminTokenRef.current = null;
+    setAdminToken(null);
+    try { localStorage.removeItem("stylehub_admin_token"); } catch (e) {}
+    setOrders([]);
+    setCustomers([]);
+  }, [adminFetch]);
+
+  const changeAdminPassword = useCallback(
+    async (oldPassword, newPassword) => {
+      try {
+        const resp = await adminFetch("/api/admin/change-password", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ oldPassword, newPassword })
+        });
+        const data = await resp.json().catch(() => ({}));
+        if (!resp.ok) return { ok: false, msg: data.error || "Could not change password" };
+        return { ok: true };
+      } catch (e) {
+        return { ok: false, msg: "Could not reach the server" };
+      }
+    },
+    [adminFetch]
+  );
+
+  // If a token was already saved in the browser (from a previous visit),
+  // quietly verify it still works on load. If the server has restarted
+  // since, the token is no longer valid — clear it so the login screen shows.
+  useEffect(() => {
+    (async () => {
+      if (adminTokenRef.current) {
+        const ok = await loadAdminData();
+        if (!ok) {
+          adminTokenRef.current = null;
+          setAdminToken(null);
+          try { localStorage.removeItem("stylehub_admin_token"); } catch (e) {}
+        }
+      }
+      setAdminChecked(true);
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const [cart, setCart] = useState([]); // {productId, size, color, qty}
   const [wishlist, setWishlist] = useState(new Set());
   const [appliedPromo, setAppliedPromo] = useState(null);
@@ -33,22 +137,18 @@ export function AppProvider({ children }) {
 
   const findProduct = useCallback((id) => products.find((p) => p.id === id), [products]);
 
-  /* ---------------- Initial load ---------------- */
+  /* ---------------- Initial load (public data only) ---------------- */
   useEffect(() => {
     (async () => {
       try {
-        const [p, o, c, s, f, pol, hs] = await Promise.all([
+        const [p, s, f, pol, hs] = await Promise.all([
           fetch("/api/products").then((r) => r.json()),
-          fetch("/api/orders").then((r) => r.json()),
-          fetch("/api/customers").then((r) => r.json()),
           fetch("/api/settings").then((r) => r.json()),
           fetch("/api/faqs").then((r) => r.json()),
           fetch("/api/policies").then((r) => r.json()),
           fetch("/api/hero-slides").then((r) => r.json())
         ]);
         setProducts(p);
-        setOrders(o);
-        setCustomers(c);
         setSettings(s);
         setFaqs(f);
         setPolicies(pol);
@@ -170,7 +270,7 @@ export function AppProvider({ children }) {
       reader.onerror = reject;
       reader.readAsDataURL(file);
     });
-    const resp = await fetch("/api/upload", {
+    const resp = await adminFetch("/api/upload", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ dataUrl })
@@ -178,7 +278,7 @@ export function AppProvider({ children }) {
     if (!resp.ok) throw new Error("Upload failed");
     const data = await resp.json();
     return data.url;
-  }, []);
+  }, [adminFetch]);
 
   /* ---------------- Admin: products CRUD ---------------- */
   const addAdminProduct = useCallback(
@@ -209,7 +309,7 @@ export function AppProvider({ children }) {
         desc: desc || ""
       };
       try {
-        const resp = await fetch("/api/products", {
+        const resp = await adminFetch("/api/products", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(newProduct)
@@ -223,26 +323,26 @@ export function AppProvider({ children }) {
         return null;
       }
     },
-    [uploadImage, showToast]
+    [uploadImage, showToast, adminFetch]
   );
 
   const deleteAdminProduct = useCallback(
     async (id) => {
       try {
-        await fetch("/api/products/" + id, { method: "DELETE" });
+        await adminFetch("/api/products/" + id, { method: "DELETE" });
         setProducts((prev) => prev.filter((p) => p.id !== id));
         showToast("Product deleted");
       } catch (e) {
         showToast("Could not reach the server");
       }
     },
-    [showToast]
+    [showToast, adminFetch]
   );
 
   const setProductStock = useCallback(
     async (id, stock) => {
       try {
-        const resp = await fetch("/api/products/" + id, {
+        const resp = await adminFetch("/api/products/" + id, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ stock })
@@ -254,7 +354,7 @@ export function AppProvider({ children }) {
         showToast("Could not reach the server");
       }
     },
-    [showToast]
+    [showToast, adminFetch]
   );
 
   const saveEditProduct = useCallback(
@@ -268,7 +368,7 @@ export function AppProvider({ children }) {
         showToast("Image upload failed — keeping the existing photo");
       }
       try {
-        const resp = await fetch("/api/products/" + id, {
+        const resp = await adminFetch("/api/products/" + id, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(patch)
@@ -282,14 +382,14 @@ export function AppProvider({ children }) {
         return null;
       }
     },
-    [uploadImage, showToast]
+    [uploadImage, showToast, adminFetch]
   );
 
   /* ---------------- Admin: orders ---------------- */
   const updateOrderStatus = useCallback(async (id, status) => {
     setOrders((prev) => prev.map((o) => (o.id === id ? { ...o, status } : o)));
     try {
-      await fetch("/api/orders/" + id, {
+      await adminFetch("/api/orders/" + id, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ status })
@@ -297,26 +397,27 @@ export function AppProvider({ children }) {
     } catch (e) {
       showToast("Could not reach the server to save status");
     }
-  }, [showToast]);
+  }, [showToast, adminFetch]);
 
   // Re-fetch orders from the server without a full page reload — used by
   // the admin panel to notice new orders placed from another tab/device.
   const refreshOrders = useCallback(async () => {
     try {
-      const resp = await fetch("/api/orders");
+      const resp = await adminFetch("/api/orders");
+      if (!resp.ok) return null;
       const fresh = await resp.json();
       setOrders(fresh);
       return fresh;
     } catch (e) {
       return null;
     }
-  }, []);
+  }, [adminFetch]);
 
   /* ---------------- Admin: settings ---------------- */
   const saveSiteSettings = useCallback(
     async (patch) => {
       try {
-        const resp = await fetch("/api/settings", {
+        const resp = await adminFetch("/api/settings", {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(patch)
@@ -328,14 +429,14 @@ export function AppProvider({ children }) {
         showToast("Could not reach the server");
       }
     },
-    [showToast]
+    [showToast, adminFetch]
   );
 
   /* ---------------- Admin: FAQs ---------------- */
   const addFaq = useCallback(
     async ({ category, question, answer }) => {
       try {
-        const resp = await fetch("/api/faqs", {
+        const resp = await adminFetch("/api/faqs", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ category, question, answer })
@@ -349,13 +450,13 @@ export function AppProvider({ children }) {
         return null;
       }
     },
-    [showToast]
+    [showToast, adminFetch]
   );
 
   const editFaq = useCallback(
     async (id, patch) => {
       try {
-        const resp = await fetch("/api/faqs/" + id, {
+        const resp = await adminFetch("/api/faqs/" + id, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(patch)
@@ -369,27 +470,27 @@ export function AppProvider({ children }) {
         return null;
       }
     },
-    [showToast]
+    [showToast, adminFetch]
   );
 
   const deleteFaq = useCallback(
     async (id) => {
       try {
-        await fetch("/api/faqs/" + id, { method: "DELETE" });
+        await adminFetch("/api/faqs/" + id, { method: "DELETE" });
         setFaqs((prev) => prev.filter((f) => f.id !== id));
         showToast("FAQ deleted");
       } catch (e) {
         showToast("Could not reach the server");
       }
     },
-    [showToast]
+    [showToast, adminFetch]
   );
 
   /* ---------------- Admin: Policies (Returns & Shipping) ---------------- */
   const savePolicy = useCallback(
     async (key, { intro, rules }) => {
       try {
-        const resp = await fetch("/api/policies/" + key, {
+        const resp = await adminFetch("/api/policies/" + key, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ intro, rules })
@@ -403,7 +504,7 @@ export function AppProvider({ children }) {
         return null;
       }
     },
-    [showToast]
+    [showToast, adminFetch]
   );
 
   /* ---------------- Admin: Homepage hero banner ---------------- */
@@ -417,7 +518,7 @@ export function AppProvider({ children }) {
         showToast("Image upload failed — slide saved without a photo");
       }
       try {
-        const resp = await fetch("/api/hero-slides", {
+        const resp = await adminFetch("/api/hero-slides", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ eyebrow, title, copy, cta, tag, price, img: imgUrl })
@@ -431,7 +532,7 @@ export function AppProvider({ children }) {
         return null;
       }
     },
-    [showToast, uploadImage]
+    [showToast, uploadImage, adminFetch]
   );
 
   const editHeroSlide = useCallback(
@@ -444,7 +545,7 @@ export function AppProvider({ children }) {
         showToast("Image upload failed — keeping the existing photo");
       }
       try {
-        const resp = await fetch("/api/hero-slides/" + id, {
+        const resp = await adminFetch("/api/hero-slides/" + id, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(patch)
@@ -458,20 +559,20 @@ export function AppProvider({ children }) {
         return null;
       }
     },
-    [showToast, uploadImage]
+    [showToast, uploadImage, adminFetch]
   );
 
   const deleteHeroSlide = useCallback(
     async (id) => {
       try {
-        await fetch("/api/hero-slides/" + id, { method: "DELETE" });
+        await adminFetch("/api/hero-slides/" + id, { method: "DELETE" });
         setHeroSlides((prev) => prev.filter((s) => s.id !== id));
         showToast("Banner slide deleted");
       } catch (e) {
         showToast("Could not reach the server");
       }
     },
-    [showToast]
+    [showToast, adminFetch]
   );
 
   const value = {
@@ -481,6 +582,7 @@ export function AppProvider({ children }) {
     wishlist, toggleWishlist,
     lastOrder, placeOrder,
     toast, showToast,
+    isAdminAuthed, adminChecked, adminLogin, adminLogout, changeAdminPassword,
     addAdminProduct, deleteAdminProduct, saveEditProduct, setProductStock, updateOrderStatus, refreshOrders, saveSiteSettings,
     addFaq, editFaq, deleteFaq, savePolicy,
     addHeroSlide, editHeroSlide, deleteHeroSlide
