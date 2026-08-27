@@ -1,0 +1,30 @@
+# Fly.io configuration for StyleHub.
+# `fly launch` normally generates this file for you — this version is
+# pre-filled with the persistent volume mount StyleHub needs, so you
+# mostly just need to change `app` to the name fly gives you and confirm
+# the volume name below matches what you create with `fly volumes create`.
+
+app = "stylehub"          # fly will ask you to confirm/change this name — it must be globally unique
+primary_region = "sin"    # Singapore — closest Fly.io region to Pakistan
+
+[build]
+
+[env]
+  PORT = "3000"
+  DATA_DIR = "/data"      # points the app at the persistent volume mounted below
+
+[[mounts]]
+  source = "stylehub_data"   # must match the volume name from `fly volumes create`
+  destination = "/data"
+
+[http_service]
+  internal_port = 3000
+  force_https = true
+  auto_stop_machines = true
+  auto_start_machines = true
+  min_machines_running = 0
+
+[[vm]]
+  memory = "256mb"
+  cpu_kind = "shared"
+  cpus = 1

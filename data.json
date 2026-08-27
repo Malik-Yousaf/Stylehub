@@ -1,0 +1,459 @@
+{
+  "products": [
+    {
+      "id": 1,
+      "name": "Oversized Wool Coat",
+      "cat": "Men",
+      "price": 12900,
+      "was": 15900,
+      "img": "https://images.unsplash.com/photo-1544022613-e87ca75a784a?w=600&q=80",
+      "img2": "https://images.unsplash.com/photo-1539533018447-63fcce2678e3?w=600&q=80",
+      "colors": [
+        "#0b0b0c",
+        "#6b5843"
+      ],
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL"
+      ],
+      "badge": "sale",
+      "rating": 4.6,
+      "reviews": 38,
+      "stock": 6,
+      "popularity": 91,
+      "isNew": false,
+      "best": true,
+      "desc": "A structured wool-blend coat with dropped shoulders and horn buttons, cut for a modern oversized silhouette. Layer it over knitwear for cold Karachi winters or Lahore fog mornings."
+    },
+    {
+      "id": 2,
+      "name": "Silk Slip Dress",
+      "cat": "Women",
+      "price": 8500,
+      "was": null,
+      "img": "https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=600&q=80",
+      "img2": "https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=600&q=80",
+      "colors": [
+        "#b23a2e",
+        "#0b0b0c",
+        "#c9a24d"
+      ],
+      "sizes": [
+        "XS",
+        "S",
+        "M",
+        "L"
+      ],
+      "badge": "new",
+      "rating": 4.8,
+      "reviews": 52,
+      "stock": 14,
+      "popularity": 97,
+      "isNew": true,
+      "best": true,
+      "desc": "Bias-cut silk slip dress with adjustable straps. Effortless for evening dinners, easily dressed up with heels or down with a denim jacket."
+    },
+    {
+      "id": 3,
+      "name": "Chelsea Leather Boots",
+      "cat": "Footwear",
+      "price": 10500,
+      "was": 13000,
+      "img": "https://images.unsplash.com/photo-1520639888713-7851133b1ed0?w=600&q=80",
+      "img2": "https://images.unsplash.com/photo-1608256246200-53e635b5b65f?w=600&q=80",
+      "colors": [
+        "#0b0b0c",
+        "#6b5843"
+      ],
+      "sizes": [
+        "39",
+        "40",
+        "41",
+        "42",
+        "43"
+      ],
+      "badge": "sale",
+      "rating": 4.7,
+      "reviews": 29,
+      "stock": 3,
+      "popularity": 88,
+      "isNew": false,
+      "best": true,
+      "desc": "Genuine leather Chelsea boots with an elastic side panel and stacked block heel. Built to be worn in, not just worn once."
+    },
+    {
+      "id": 4,
+      "name": "Structured Tote Bag",
+      "cat": "Accessories",
+      "price": 6200,
+      "was": null,
+      "img": "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=600&q=80",
+      "img2": "https://images.unsplash.com/photo-1591561954557-26941169b49e?w=600&q=80",
+      "colors": [
+        "#0b0b0c",
+        "#f0ece4",
+        "#b8912f"
+      ],
+      "sizes": [
+        "One Size"
+      ],
+      "badge": "",
+      "rating": 4.5,
+      "reviews": 21,
+      "stock": 19,
+      "popularity": 76,
+      "isNew": false,
+      "best": false,
+      "desc": "A clean-lined structured tote in vegan leather, sized for a laptop and everyday essentials. Detachable strap included."
+    },
+    {
+      "id": 5,
+      "name": "Merino Crewneck",
+      "cat": "Men",
+      "price": 5400,
+      "was": null,
+      "img": "https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=600&q=80",
+      "img2": "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?w=600&q=80",
+      "colors": [
+        "#1a1a1d",
+        "#f0ece4",
+        "#6b5843"
+      ],
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL"
+      ],
+      "badge": "new",
+      "rating": 4.4,
+      "reviews": 17,
+      "stock": 24,
+      "popularity": 69,
+      "isNew": true,
+      "best": false,
+      "desc": "Fine-gauge merino wool crewneck — breathable enough for layering, warm enough to wear alone on cooler evenings."
+    },
+    {
+      "id": 6,
+      "name": "Pleated Midi Skirt",
+      "cat": "Women",
+      "price": 6800,
+      "was": 8200,
+      "img": "https://images.unsplash.com/photo-1583496661160-fb5886a13d77?w=600&q=80",
+      "img2": "https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=600&q=80",
+      "colors": [
+        "#0b0b0c",
+        "#b8912f"
+      ],
+      "sizes": [
+        "XS",
+        "S",
+        "M",
+        "L"
+      ],
+      "badge": "sale",
+      "rating": 4.3,
+      "reviews": 12,
+      "stock": 8,
+      "popularity": 64,
+      "isNew": false,
+      "best": false,
+      "desc": "Sunray pleated midi skirt with a high waist and hidden side zip. Movement built into every step."
+    },
+    {
+      "id": 7,
+      "name": "Classic White Sneakers",
+      "cat": "Footwear",
+      "price": 7200,
+      "was": null,
+      "img": "https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?w=600&q=80",
+      "img2": "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=600&q=80",
+      "colors": [
+        "#f0ece4",
+        "#0b0b0c"
+      ],
+      "sizes": [
+        "38",
+        "39",
+        "40",
+        "41",
+        "42",
+        "43"
+      ],
+      "badge": "",
+      "rating": 4.9,
+      "reviews": 64,
+      "stock": 31,
+      "popularity": 99,
+      "isNew": false,
+      "best": true,
+      "desc": "Minimal leather sneakers with a cushioned sole — the everyday pair that goes with everything from denim to tailoring."
+    },
+    {
+      "id": 8,
+      "name": "Gold-Trim Sunglasses",
+      "cat": "Accessories",
+      "price": 4200,
+      "was": null,
+      "img": "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=600&q=80",
+      "img2": "https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=600&q=80",
+      "colors": [
+        "#0b0b0c",
+        "#6b5843"
+      ],
+      "sizes": [
+        "One Size"
+      ],
+      "badge": "new",
+      "rating": 4.2,
+      "reviews": 9,
+      "stock": 16,
+      "popularity": 58,
+      "isNew": true,
+      "best": false,
+      "desc": "Acetate frame sunglasses with fine gold-tone hardware and UV400 polarized lenses."
+    },
+    {
+      "id": 9,
+      "name": "Linen Button Shirt",
+      "cat": "Men",
+      "price": 5900,
+      "was": 7200,
+      "img": "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=600&q=80",
+      "img2": "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=600&q=80",
+      "colors": [
+        "#f0ece4",
+        "#6b5843",
+        "#0b0b0c"
+      ],
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL"
+      ],
+      "badge": "sale",
+      "rating": 4.5,
+      "reviews": 33,
+      "stock": 0,
+      "popularity": 81,
+      "isNew": false,
+      "best": false,
+      "desc": "100% linen shirt with a relaxed fit and mother-of-pearl buttons. Breathable through Karachi summers."
+    }
+  ],
+  "orders": [
+    {
+      "id": "SH-88231",
+      "customer": "Ayesha Khan",
+      "email": "ayesha.k@example.com",
+      "date": "2026-08-10",
+      "total": 16700,
+      "status": "delivered"
+    },
+    {
+      "id": "SH-88109",
+      "customer": "Ayesha Khan",
+      "email": "ayesha.k@example.com",
+      "date": "2026-08-02",
+      "total": 8500,
+      "status": "shipped"
+    },
+    {
+      "id": "SH-88045",
+      "customer": "Sana Riaz",
+      "email": "sana.r@example.com",
+      "date": "2026-08-18",
+      "total": 12900,
+      "status": "delivered"
+    },
+    {
+      "id": "SH-88002",
+      "customer": "Hamza Ali",
+      "email": "hamza.ali@example.com",
+      "date": "2026-08-19",
+      "total": 7200,
+      "status": "processing"
+    }
+  ],
+  "customers": [
+    {
+      "name": "Ayesha Khan",
+      "email": "ayesha.k@example.com",
+      "orders": 4,
+      "spent": 41200
+    },
+    {
+      "name": "Bilal Ahmed",
+      "email": "bilal.a@example.com",
+      "orders": 2,
+      "spent": 15600
+    },
+    {
+      "name": "Sana Riaz",
+      "email": "sana.r@example.com",
+      "orders": 6,
+      "spent": 58900
+    },
+    {
+      "name": "Hamza Ali",
+      "email": "hamza.ali@example.com",
+      "orders": 1,
+      "spent": 7200
+    }
+  ],
+  "settings": {
+    "storeName": "StyleHub",
+    "tagline": "Modern lifestyle & fashion store",
+    "phone": "+92 300 0000000",
+    "whatsapp": "923000000000",
+    "email": "support@stylehub.pk",
+    "address": "Karachi, Pakistan",
+    "heroBannerText": "Free shipping on orders over Rs. 5,000 · Cash on Delivery available nationwide"
+  },
+  "faqs": [
+    {
+      "id": 1,
+      "category": "Shipping & Delivery",
+      "question": "Delivery mein kitne din lagte hain?",
+      "answer": "Karachi, Lahore aur Islamabad mein 1-3 business days, aur baqi Pakistan mein 3-5 business days lagte hain.",
+      "order": 0
+    },
+    {
+      "id": 2,
+      "category": "Shipping & Delivery",
+      "question": "Shipping charges kitne hain aur kab free hoti hai?",
+      "answer": "Shipping city ke hisab se Rs. 200 se Rs. 350 tak hai. Rs. 5,000 se zyada ke order par shipping free hai.",
+      "order": 1
+    },
+    {
+      "id": 3,
+      "category": "Shipping & Delivery",
+      "question": "Kya order track kiya ja sakta hai?",
+      "answer": "Order place karne ke baad aapko ek order ID milta hai. Confirmation page par order ka status (Processing/Shipped/Delivered) dekha ja sakta hai.",
+      "order": 2
+    },
+    {
+      "id": 4,
+      "category": "Shipping & Delivery",
+      "question": "Kya aap Pakistan ke sab shehron mein deliver karte hain?",
+      "answer": "Ji haan, hum Pakistan ke tamam bade aur chote shehron mein delivery karte hain.",
+      "order": 3
+    },
+    {
+      "id": 5,
+      "category": "Payment & Pricing",
+      "question": "Kaunse payment methods available hain?",
+      "answer": "Cash on Delivery (COD), JazzCash aur EasyPaisa se payment kar sakte hain. Debit/Credit card jald hi available hoga.",
+      "order": 4
+    },
+    {
+      "id": 6,
+      "category": "Payment & Pricing",
+      "question": "Kya COD pe extra charges lagte hain?",
+      "answer": "Nahi, Cash on Delivery par koi extra charges nahi hain — sirf shipping fee lagti hai.",
+      "order": 5
+    },
+    {
+      "id": 7,
+      "category": "Payment & Pricing",
+      "question": "Promo code kaise use karein?",
+      "answer": "Cart page par 'Promo code' box mein apna code likh kar Apply par click karein, discount total mein turant nazar aa jayega.",
+      "order": 6
+    },
+    {
+      "id": 8,
+      "category": "Returns & Exchange",
+      "question": "Return/exchange policy kya hai?",
+      "answer": "Delivery ke 7 din ke andar, agar item unworn hai aur tags laga hua hai, to aap use return ya exchange kar sakte hain.",
+      "order": 7
+    },
+    {
+      "id": 9,
+      "category": "Returns & Exchange",
+      "question": "Size fit nahi aaya to kya karein?",
+      "answer": "Hamare WhatsApp number par contact karein — hum size exchange ka process free mein guide karenge.",
+      "order": 8
+    },
+    {
+      "id": 10,
+      "category": "Sizing & Product",
+      "question": "Sahi size kaise choose karein?",
+      "answer": "Har product page par 'Size chart' link diya gaya hai jahan chest, waist aur length ki exact measurements mil jayengi.",
+      "order": 9
+    },
+    {
+      "id": 11,
+      "category": "Order & Account",
+      "question": "Order place karne ke liye account banana zaroori hai kya?",
+      "answer": "Nahi, StyleHub par guest checkout available hai — bina account banaye bhi order place kiya ja sakta hai.",
+      "order": 10
+    }
+  ],
+  "policies": {
+    "returns": {
+      "intro": "We want you to love what you ordered. If something isn't right, here's how returns and exchanges work at StyleHub.",
+      "rules": [
+        "Items can be returned or exchanged within 7 days of delivery.",
+        "Item must be unworn, unwashed, and with original tags attached.",
+        "Footwear must be returned in its original box, undamaged.",
+        "Sale/clearance items are final sale and cannot be returned or exchanged, unless defective.",
+        "To start a return or exchange, contact us on WhatsApp with your order ID.",
+        "Refunds for COD orders are processed via bank transfer within 5-7 business days after we receive the item.",
+        "Exchange for a different size is free — no additional shipping charge.",
+        "Items damaged due to normal wear, misuse, or alteration are not eligible for return."
+      ]
+    },
+    "shipping": {
+      "intro": "We ship across Pakistan. Here's what to expect on delivery times, charges, and tracking.",
+      "rules": [
+        "Karachi, Lahore & Islamabad: 1-3 business days.",
+        "All other cities in Pakistan: 3-5 business days.",
+        "Shipping charges range from Rs. 200-350 depending on your city, calculated automatically at checkout.",
+        "Orders over Rs. 5,000 qualify for free shipping.",
+        "Cash on Delivery (COD) is available nationwide with no extra charge.",
+        "You'll receive an order ID at checkout — order status can be viewed on the confirmation page.",
+        "Orders are processed within 24 hours on business days (Mon-Sat).",
+        "We currently do not ship internationally."
+      ]
+    }
+  },
+  "heroSlides": [
+    {
+      "id": 1,
+      "eyebrow": "New Season · 20% Off",
+      "title": "Dress for <em>every</em> version of you.",
+      "copy": "Modern essentials in premium fabrics — from tailored coats to everyday denim, delivered across Pakistan.",
+      "cta": "Shop New Arrivals",
+      "tag": "New In",
+      "price": "From Rs. 4,200",
+      "img": "https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=600&q=80",
+      "order": 0
+    },
+    {
+      "id": 2,
+      "eyebrow": "Limited Time",
+      "title": "Winter layers, <em>up to 30% off.</em>",
+      "copy": "Wool coats, crewnecks and boots built for Karachi winters and Lahore fog. While stock lasts.",
+      "cta": "Shop the Sale",
+      "tag": "Up to 30% Off",
+      "price": "Coats from Rs. 12,900",
+      "img": "https://images.unsplash.com/photo-1544022613-e87ca75a784a?w=600&q=80",
+      "order": 1
+    },
+    {
+      "id": 3,
+      "eyebrow": "Fan Favourite",
+      "title": "The sneaker <em>everyone's</em> wearing.",
+      "copy": "Our best-rated pair — 4.9★ from over 60 reviews. Minimal, versatile, always in stock.",
+      "cta": "Shop Footwear",
+      "tag": "Best Seller",
+      "price": "Rs. 7,200",
+      "img": "https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?w=600&q=80",
+      "order": 2
+    }
+  ]
+}

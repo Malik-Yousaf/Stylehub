@@ -1,0 +1,3 @@
+This folder is where product photos uploaded through the Admin
+panel get saved. It's safe to leave empty — server.js creates it
+automatically if it's missing anyway.

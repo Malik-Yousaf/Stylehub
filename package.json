@@ -1,0 +1,10 @@
+{
+  "name": "stylehub-project",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "setup": "cd client && npm install && npm run build",
+    "start": "node server.js",
+    "start:fresh": "npm run setup && npm start"
+  }
+}
