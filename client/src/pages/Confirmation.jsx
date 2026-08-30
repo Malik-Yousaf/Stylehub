@@ -47,6 +47,7 @@ export default function Confirmation() {
             </div>
             <div style={{ marginTop: 34, display: "flex", gap: 12, justifyContent: "center" }}>
               <button className="btn btn-gold" onClick={() => navigate("/shop")}>Continue Shopping</button>
+              <button className="btn btn-outline" onClick={() => navigate("/track-order")}>Track Order</button>
             </div>
           </div>
         </div>

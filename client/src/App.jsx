@@ -3,7 +3,7 @@ import { Routes, Route, useLocation } from "react-router-dom";
 import Nav from "./components/Nav.jsx";
 import MobileDrawer from "./components/MobileDrawer.jsx";
 import Footer from "./components/Footer.jsx";
-import { ToastBox, WhatsAppFab } from "./components/ToastAndFab.jsx";
+import { ToastBox, WhatsAppFab, ScrollToTopFab } from "./components/ToastAndFab.jsx";
 import SplashScreen from "./components/SplashScreen.jsx";
 import { useApp } from "./context/AppContext.jsx";
 
@@ -13,6 +13,7 @@ import ProductPage from "./pages/ProductPage.jsx";
 import Cart from "./pages/Cart.jsx";
 import Checkout from "./pages/Checkout.jsx";
 import Confirmation from "./pages/Confirmation.jsx";
+import TrackOrder from "./pages/TrackOrder.jsx";
 import Faq from "./pages/Faq.jsx";
 import Policy from "./pages/Policy.jsx";
 import Admin from "./pages/Admin/Admin.jsx";
@@ -83,11 +84,13 @@ export default function App() {
             <Route path="/cart" element={<Cart />} />
             <Route path="/checkout" element={<Checkout />} />
             <Route path="/confirmation" element={<Confirmation />} />
+            <Route path="/track-order" element={<TrackOrder />} />
             <Route path="/faq" element={<Faq />} />
             <Route path="/policy/:type" element={<Policy />} />
           </Routes>
 
           <WhatsAppFab />
+          <ScrollToTopFab />
           <ToastBox />
           <Footer />
         </>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useApp } from "../context/AppContext";
 
 export function ToastBox() {
@@ -24,3 +24,35 @@ export function WhatsAppFab() {
     </button>
   );
 }
+
+export function ScrollToTopFab() {
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    function onScroll() {
+      setVisible(window.scrollY > 400);
+    }
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  function scrollToTop() {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  return (
+    <button
+      className={"scrolltop-fab" + (visible ? " show" : "")}
+      title="Back to top"
+      onClick={scrollToTop}
+      aria-label="Back to top"
+    >
+      <svg viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <line x1="12" y1="19" x2="12" y2="5"></line>
+        <polyline points="6 11 12 5 18 11"></polyline>
+      </svg>
+    </button>
+  );
+}
+

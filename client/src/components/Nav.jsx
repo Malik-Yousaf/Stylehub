@@ -16,6 +16,8 @@ export default function Nav({ onOpenDrawer }) {
   }
 
   const linkClass = (path) => (location.pathname === path ? "active" : "");
+  const catLinkClass = (cat) =>
+    location.pathname === "/shop" && location.state?.category === cat ? "active" : "";
 
   return (
     <>
@@ -31,7 +33,10 @@ export default function Nav({ onOpenDrawer }) {
           <Link to="/" className="logo">Style<span className="dot">Hub</span></Link>
           <div className="navlinks" id="navlinks">
             <Link to="/" className={linkClass("/")}>Home</Link>
-            <Link to="/shop" className={linkClass("/shop")}>Shop</Link>
+            <Link to="/shop" state={{ category: "Men" }} className={catLinkClass("Men")}>Men</Link>
+            <Link to="/shop" state={{ category: "Women" }} className={catLinkClass("Women")}>Women</Link>
+            <Link to="/shop" state={{ category: "Accessories" }} className={catLinkClass("Accessories")}>Accessories</Link>
+            <Link to="/shop" state={{ category: "Footwear" }} className={catLinkClass("Footwear")}>Footwear</Link>
             {isAdminSection && <Link to="/admin" className={linkClass("/admin")}>Admin</Link>}
           </div>
           <div className="search-inline">
@@ -45,6 +50,9 @@ export default function Nav({ onOpenDrawer }) {
             />
           </div>
           <div className="navactions">
+            <button className="icon-btn" title="Track Order" onClick={() => navigate("/track-order")}>
+              📦
+            </button>
             <button
               className="icon-btn"
               title="Wishlist"

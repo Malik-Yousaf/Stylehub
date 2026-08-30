@@ -23,6 +23,7 @@ export default function Footer() {
           <div>
             <h4>Support</h4>
             <ul>
+              <li><Link to="/track-order">Track Order</Link></li>
               <li><Link to="/policy/returns">Returns &amp; Exchanges</Link></li>
               <li><Link to="/policy/shipping">Shipping Info</Link></li>
               <li><Link to="/faq">FAQs</Link></li>

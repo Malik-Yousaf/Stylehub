@@ -288,6 +288,20 @@ const server = http.createServer(async (req, res) => {
       return sendJSON(res, 200, data.orders[idx]);
     }
 
+    // Public order tracking — customer looks up their own order by ID + email.
+    // No admin auth required, but the email must match so strangers can't
+    // browse other people's orders just by guessing an order ID.
+    m = pathname.match(/^\/api\/track\/([\w-]+)$/);
+    if (m && req.method === 'GET') {
+      const email = (parsed.query.email || '').trim().toLowerCase();
+      const order = data.orders.find(o => o.id.toLowerCase() === m[1].toLowerCase());
+      if (!order || !email || order.email.trim().toLowerCase() !== email) {
+        return sendJSON(res, 404, { error: 'No matching order found. Please check your Order ID and email.' });
+      }
+      const { id, status, date, eta, items, total, payment, city } = order;
+      return sendJSON(res, 200, { id, status, date, eta, items, total, payment, city });
+    }
+
     // ----- Customers -----
     if (pathname === '/api/customers' && req.method === 'GET') {
       if (!requireAdmin(req, res)) return;

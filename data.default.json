@@ -318,78 +318,78 @@
     {
       "id": 1,
       "category": "Shipping & Delivery",
-      "question": "Delivery mein kitne din lagte hain?",
-      "answer": "Karachi, Lahore aur Islamabad mein 1-3 business days, aur baqi Pakistan mein 3-5 business days lagte hain.",
+      "question": "How long does delivery take?",
+      "answer": "Delivery takes 1-3 business days in Karachi, Lahore and Islamabad, and 3-5 business days in the rest of Pakistan.",
       "order": 0
     },
     {
       "id": 2,
       "category": "Shipping & Delivery",
-      "question": "Shipping charges kitne hain aur kab free hoti hai?",
-      "answer": "Shipping city ke hisab se Rs. 200 se Rs. 350 tak hai. Rs. 5,000 se zyada ke order par shipping free hai.",
+      "question": "What are the shipping charges and when is shipping free?",
+      "answer": "Shipping ranges from Rs. 200 to Rs. 350 depending on the city. Shipping is free on orders above Rs. 5,000.",
       "order": 1
     },
     {
       "id": 3,
       "category": "Shipping & Delivery",
-      "question": "Kya order track kiya ja sakta hai?",
-      "answer": "Order place karne ke baad aapko ek order ID milta hai. Confirmation page par order ka status (Processing/Shipped/Delivered) dekha ja sakta hai.",
+      "question": "Can I track my order?",
+      "answer": "You'll receive an order ID after placing your order. You can check the order status (Processing/Shipped/Delivered) on the confirmation page.",
       "order": 2
     },
     {
       "id": 4,
       "category": "Shipping & Delivery",
-      "question": "Kya aap Pakistan ke sab shehron mein deliver karte hain?",
-      "answer": "Ji haan, hum Pakistan ke tamam bade aur chote shehron mein delivery karte hain.",
+      "question": "Do you deliver to all cities in Pakistan?",
+      "answer": "Yes, we deliver to all major and smaller cities across Pakistan.",
       "order": 3
     },
     {
       "id": 5,
       "category": "Payment & Pricing",
-      "question": "Kaunse payment methods available hain?",
-      "answer": "Cash on Delivery (COD), JazzCash aur EasyPaisa se payment kar sakte hain. Debit/Credit card jald hi available hoga.",
+      "question": "What payment methods are available?",
+      "answer": "You can pay via Cash on Delivery (COD), JazzCash or EasyPaisa. Debit/Credit card payment will be available soon.",
       "order": 4
     },
     {
       "id": 6,
       "category": "Payment & Pricing",
-      "question": "Kya COD pe extra charges lagte hain?",
-      "answer": "Nahi, Cash on Delivery par koi extra charges nahi hain — sirf shipping fee lagti hai.",
+      "question": "Are there extra charges for COD?",
+      "answer": "No, there are no extra charges for Cash on Delivery — only the standard shipping fee applies.",
       "order": 5
     },
     {
       "id": 7,
       "category": "Payment & Pricing",
-      "question": "Promo code kaise use karein?",
-      "answer": "Cart page par 'Promo code' box mein apna code likh kar Apply par click karein, discount total mein turant nazar aa jayega.",
+      "question": "How do I use a promo code?",
+      "answer": "On the cart page, enter your code in the 'Promo code' box and click Apply — the discount will be reflected in the total immediately.",
       "order": 6
     },
     {
       "id": 8,
       "category": "Returns & Exchange",
-      "question": "Return/exchange policy kya hai?",
-      "answer": "Delivery ke 7 din ke andar, agar item unworn hai aur tags laga hua hai, to aap use return ya exchange kar sakte hain.",
+      "question": "What is your return/exchange policy?",
+      "answer": "Within 7 days of delivery, you can return or exchange an item as long as it's unworn and the tags are still attached.",
       "order": 7
     },
     {
       "id": 9,
       "category": "Returns & Exchange",
-      "question": "Size fit nahi aaya to kya karein?",
-      "answer": "Hamare WhatsApp number par contact karein — hum size exchange ka process free mein guide karenge.",
+      "question": "What if the size doesn't fit?",
+      "answer": "Contact us on our WhatsApp number — we'll guide you through a free size exchange.",
       "order": 8
     },
     {
       "id": 10,
       "category": "Sizing & Product",
-      "question": "Sahi size kaise choose karein?",
-      "answer": "Har product page par 'Size chart' link diya gaya hai jahan chest, waist aur length ki exact measurements mil jayengi.",
+      "question": "How do I choose the right size?",
+      "answer": "Every product page has a 'Size chart' link with exact chest, waist and length measurements.",
       "order": 9
     },
     {
       "id": 11,
       "category": "Order & Account",
-      "question": "Order place karne ke liye account banana zaroori hai kya?",
-      "answer": "Nahi, StyleHub par guest checkout available hai — bina account banaye bhi order place kiya ja sakta hai.",
+      "question": "Do I need to create an account to place an order?",
+      "answer": "No, StyleHub supports guest checkout — you can place an order without creating an account.",
       "order": 10
     }
   ],
