@@ -187,13 +187,94 @@ current password once to set a new one).
 Notes on how the login works:
   - There's only one shared admin password (no separate accounts) —
     fine for a single shop owner/small team managing the store.
-  - After logging in, your browser stays logged in (even after closing
-    the tab) until you click "Log Out", or the server is restarted
-    (session tokens live in the server's memory, not in data.json).
+  - After logging in, your browser stays logged in for 24 hours, or
+    until you click "Log Out", or the server is restarted (session
+    tokens live in the server's memory, not in data.json).
   - If you forget the password, you (or a developer) can reset it by
     opening data.json on the server, removing the "adminPassword" line
     from the "settings" section, and restarting the server — it will
     fall back to the default (admin123) again.
+  - After 5 wrong password attempts, that IP is locked out of logging
+    in for 15 minutes (stops simple password-guessing bots).
+
+
+SECURITY NOTES
+------------------------------
+A few things worth knowing about how this project protects itself, and
+what's still on you if you deploy it somewhere public:
+
+What's already handled:
+  - The admin password is stored as a salted hash (not plain text),
+    and compared using a timing-safe check.
+  - Login is rate-limited (5 tries / 15 min per IP) to slow down
+    password-guessing bots.
+  - Every file-serving route (product photo uploads, the built React
+    app) blocks path-traversal requests (e.g. someone requesting
+    "/uploads/../../data.json" to try to steal your data file) —
+    those now get rejected with a 403 instead of leaking the file.
+  - Product photo uploads only accept PNG/JPG/GIF/WEBP — SVG is
+    blocked because an SVG file can embed a <script> tag that runs if
+    someone opens the uploaded file's URL directly.
+  - Admin-entered banner text is sanitized before being shown, so it
+    can only use basic formatting tags (bold/italic/etc) — arbitrary
+    HTML/JavaScript pasted into a banner title can't execute.
+  - Requests with an oversized body (way bigger than any real form
+    submission or photo upload should be) are rejected instead of
+    being allowed to exhaust server memory.
+
+What's still on you:
+  - data.json contains real secrets (your admin password hash, SMTP
+    password if you set one up, Gemini API key) plus every customer's
+    order/contact info. Never commit it to a public GitHub repo, and
+    make sure whatever hosting you use doesn't serve it publicly (the
+    server itself never exposes it over HTTP, but a misconfigured
+    static file host or a stray backup upload could).
+  - Change the default admin password before going live — see above.
+  - Put the site behind HTTPS in production (Fly.io does this for you
+    automatically; if you self-host, use a reverse proxy like Caddy or
+    Nginx with a free Let's Encrypt certificate — never run the admin
+    panel over plain HTTP on the public internet).
+  - This is a single-admin, single-server app with no database — it's
+    built for a small store, not a high-traffic marketplace. If you
+    outgrow it, you'll want a proper database and multi-instance setup
+    at some point.
+
+
+AI CHAT ASSISTANT (Gemini)
+------------------------------
+The storefront has a chat bubble (bottom-right) that answers customer
+questions about your products, FAQs, shipping and returns, powered by
+Google's Gemini API. It's off (falls back to "contact us on WhatsApp")
+until you add a free API key.
+
+To turn it on:
+  1. Get a free key at https://aistudio.google.com/apikey (sign in with
+     a Google account, click "Create API key" — no credit card needed).
+  2. Go to Admin -> Settings -> "AI Chat Assistant", paste the key in,
+     make sure "Show the chat assistant on the storefront" is checked,
+     and click Save.
+
+That's it — the bubble on the storefront starts answering using your
+live product catalog, FAQs and policies (it's told never to invent
+prices or policies that aren't actually in data.json).
+
+Notes:
+  - The key is stored in data.json (settings.chatbot), the same place
+    as everything else, so it persists across restarts/redeploys the
+    same way your products and orders do.
+  - Alternatively, you can set a GEMINI_API_KEY environment variable
+    on the server instead of using the Settings page (handy if you'd
+    rather not have the key sitting in data.json) — it takes priority
+    over whatever is saved in Settings.
+  - Google's free tier has rate limits (requests per minute/day) —
+    fine for a small store, but if you get a lot of traffic you may
+    need to enable billing on the Gemini API key later.
+  - You can change which Gemini model is used by setting a
+    GEMINI_MODEL environment variable (defaults to "gemini-3.6-flash").
+    Google retires/renames free-tier model names every so often — if the
+    chat widget ever starts erroring with something like "model no longer
+    available", check https://ai.google.dev/gemini-api/docs/models for the
+    current recommended flash model name and set GEMINI_MODEL to it.
 
 
 HOW TO USE THE ADMIN PANEL

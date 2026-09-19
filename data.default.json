@@ -134,7 +134,7 @@
       "popularity": 69,
       "isNew": true,
       "best": false,
-      "desc": "Fine-gauge merino wool crewneck — breathable enough for layering, warm enough to wear alone on cooler evenings."
+      "desc": "Fine-gauge merino wool crewneck \u2014 breathable enough for layering, warm enough to wear alone on cooler evenings."
     },
     {
       "id": 6,
@@ -190,7 +190,7 @@
       "popularity": 99,
       "isNew": false,
       "best": true,
-      "desc": "Minimal leather sneakers with a cushioned sole — the everyday pair that goes with everything from denim to tailoring."
+      "desc": "Minimal leather sneakers with a cushioned sole \u2014 the everyday pair that goes with everything from denim to tailoring."
     },
     {
       "id": 8,
@@ -312,7 +312,7 @@
     "whatsapp": "923000000000",
     "email": "support@stylehub.pk",
     "address": "Karachi, Pakistan",
-    "heroBannerText": "Free shipping on orders over Rs. 5,000 · Cash on Delivery available nationwide"
+    "heroBannerText": "Free shipping on orders over Rs. 5,000 \u00b7 Cash on Delivery available nationwide"
   },
   "faqs": [
     {
@@ -354,14 +354,14 @@
       "id": 6,
       "category": "Payment & Pricing",
       "question": "Are there extra charges for COD?",
-      "answer": "No, there are no extra charges for Cash on Delivery — only the standard shipping fee applies.",
+      "answer": "No, there are no extra charges for Cash on Delivery \u2014 only the standard shipping fee applies.",
       "order": 5
     },
     {
       "id": 7,
       "category": "Payment & Pricing",
       "question": "How do I use a promo code?",
-      "answer": "On the cart page, enter your code in the 'Promo code' box and click Apply — the discount will be reflected in the total immediately.",
+      "answer": "On the cart page, enter your code in the 'Promo code' box and click Apply \u2014 the discount will be reflected in the total immediately.",
       "order": 6
     },
     {
@@ -375,7 +375,7 @@
       "id": 9,
       "category": "Returns & Exchange",
       "question": "What if the size doesn't fit?",
-      "answer": "Contact us on our WhatsApp number — we'll guide you through a free size exchange.",
+      "answer": "Contact us on our WhatsApp number \u2014 we'll guide you through a free size exchange.",
       "order": 8
     },
     {
@@ -389,7 +389,7 @@
       "id": 11,
       "category": "Order & Account",
       "question": "Do I need to create an account to place an order?",
-      "answer": "No, StyleHub supports guest checkout — you can place an order without creating an account.",
+      "answer": "No, StyleHub supports guest checkout \u2014 you can place an order without creating an account.",
       "order": 10
     }
   ],
@@ -403,7 +403,7 @@
         "Sale/clearance items are final sale and cannot be returned or exchanged, unless defective.",
         "To start a return or exchange, contact us on WhatsApp with your order ID.",
         "Refunds for COD orders are processed via bank transfer within 5-7 business days after we receive the item.",
-        "Exchange for a different size is free — no additional shipping charge.",
+        "Exchange for a different size is free \u2014 no additional shipping charge.",
         "Items damaged due to normal wear, misuse, or alteration are not eligible for return."
       ]
     },
@@ -415,7 +415,7 @@
         "Shipping charges range from Rs. 200-350 depending on your city, calculated automatically at checkout.",
         "Orders over Rs. 5,000 qualify for free shipping.",
         "Cash on Delivery (COD) is available nationwide with no extra charge.",
-        "You'll receive an order ID at checkout — order status can be viewed on the confirmation page.",
+        "You'll receive an order ID at checkout \u2014 order status can be viewed on the confirmation page.",
         "Orders are processed within 24 hours on business days (Mon-Sat).",
         "We currently do not ship internationally."
       ]
@@ -424,9 +424,9 @@
   "heroSlides": [
     {
       "id": 1,
-      "eyebrow": "New Season · 20% Off",
+      "eyebrow": "New Season \u00b7 20% Off",
       "title": "Dress for <em>every</em> version of you.",
-      "copy": "Modern essentials in premium fabrics — from tailored coats to everyday denim, delivered across Pakistan.",
+      "copy": "Modern essentials in premium fabrics \u2014 from tailored coats to everyday denim, delivered across Pakistan.",
       "cta": "Shop New Arrivals",
       "tag": "New In",
       "price": "From Rs. 4,200",
@@ -448,12 +448,13 @@
       "id": 3,
       "eyebrow": "Fan Favourite",
       "title": "The sneaker <em>everyone's</em> wearing.",
-      "copy": "Our best-rated pair — 4.9★ from over 60 reviews. Minimal, versatile, always in stock.",
+      "copy": "Our best-rated pair \u2014 4.9\u2605 from over 60 reviews. Minimal, versatile, always in stock.",
       "cta": "Shop Footwear",
       "tag": "Best Seller",
       "price": "Rs. 7,200",
       "img": "https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?w=600&q=80",
       "order": 2
     }
-  ]
+  ],
+  "subscribers": []
 }
